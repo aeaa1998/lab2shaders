@@ -189,6 +189,9 @@ class Render(object):
 
 
     def shader(self, x, y, z, intensity):
+
+
+        intensity = 1
         if z > 720:
             return color(int(195 * intensity), int(233 * intensity), int(236 * intensity))
         elif z > 700:
@@ -207,8 +210,10 @@ class Render(object):
             return color(int(137 * intensity), int(174 * intensity), int(182 * intensity))
         elif z > 590:
             return color(int(126 * intensity), int(161 * intensity), int(167 * intensity))
+        elif z > 575:
+            return color(int(100 * intensity), int(138 * intensity), int(141 * intensity))
         else:
-            return color(int(63 * intensity), int(83 * intensity), int(89 * intensity))
+            return color(int(83 * intensity), int(103 * intensity), int(109 * intensity))
 
     def glInit(self):
         self.viewPort = ViewPort()
@@ -413,7 +418,6 @@ class Render(object):
                 grey = round(255 * intensity)
                 if grey < 0:
                     continue
-
                 self.triangle(a, b, c, intensity)
             else:
                 # assuming 4
@@ -454,8 +458,10 @@ class Render(object):
                     continue
 
                 z = A.z * w + B.z * v + C.z * u
+                if x < 0 or y < 0:
+                    continue
                 try:
-                    if z > self.zbuffer[x][y]:
+                    if x < len(self.zbuffer) and y < len(self.zbuffer[x]) and z > self.zbuffer[x][y]:
                         self.point(x, y, self.shader(x,y,z, intensity))
                         self.zbuffer[x][y] = z
                 except Exception as e:
